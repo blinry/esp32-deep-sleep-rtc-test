@@ -3,7 +3,10 @@
 
 use core::time::Duration;
 use esp32_hal::{
-    clock::ClockControl, peripherals::Peripherals, prelude::*, rtc_cntl::sleep::TimerWakeupSource,
+    clock::ClockControl,
+    peripherals::Peripherals,
+    prelude::*,
+    rtc_cntl::sleep::{RtcSleepConfig, TimerWakeupSource},
     Delay, Rtc,
 };
 use esp_backtrace as _;
@@ -41,5 +44,12 @@ fn main() -> ! {
     delay.delay_ms(100u32);
 
     let timer = TimerWakeupSource::new(Duration::from_secs(3));
-    rtc.sleep_deep(&[&timer], &mut delay);
+
+    let mut cfg = RtcSleepConfig::deep();
+    cfg.set_rtc_fastmem_pd_en(false);
+    cfg.set_rtc_slowmem_pd_en(false);
+
+    rtc.sleep(&cfg, &[&timer], &mut delay);
+
+    panic!("Should never reach this after the sleep() call.");
 }
