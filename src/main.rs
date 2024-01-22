@@ -25,7 +25,7 @@ fn main() -> ! {
 
     let clocks = ClockControl::max(system.clock_control).freeze();
     let mut delay = Delay::new(&clocks);
-    let mut rtc = Rtc::new(peripherals.RTC_CNTL);
+    let mut rtc = Rtc::new(peripherals.LPWR);
 
     unsafe {
         println!("Value of RTC_FAST_DATA: {}", RTC_FAST_DATA);
